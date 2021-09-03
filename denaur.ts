@@ -55,13 +55,27 @@ async function installPackage(aurPackage : string, verbose : boolean) {
 	logn(Colors.green("Finished.\n"));
 };
 
+async function installPacmanPackage(pacmanPackage : string) {
+	logn("Starting install... ");
+
+	const pacmanProcess = Deno.run({ cmd: ["sudo", "pacman", "-Syu", pacmanPackage] });
+
+	const { code } = await pacmanProcess.status();
+
+	if(code !== 0) return console.log(Colors.red("Failed.\n"));;
+
+	console.log(Colors.green(`Package '${pacmanPackage}' installed successfully.`));
+	
+	logn(Colors.green("Finished.\n"));
+};
+
 async function removePackage(aurPackage : string, verbose : boolean) {
 	let stdioOut : any = "piped";
 	if(verbose) stdioOut = null;
 	
 	logn("Removing package... \n");
 
-	const removeProcess = Deno.run({ cmd: ["sudo", "pacman", "-R", aurPackage, "--noconfirm"], stdout: stdioOut, stdin: stdioOut });
+	const removeProcess = Deno.run({ cmd: ["sudo", "pacman", "-R", aurPackage, "--noconfirm"], stderr: stdioOut, stdout: stdioOut, stdin: stdioOut });
 
 	const { code } = await removeProcess.status();
 
@@ -73,14 +87,15 @@ async function removePackage(aurPackage : string, verbose : boolean) {
 	};
 
 	console.log(Colors.green(`Package '${aurPackage}' removed successfully.`));
-	logn(Colors.green("Finished.\n"));
+	logn(Colors.green("Finished. \n"));
 };
 
 function help() {
 	console.log("Denaur Commands");
 	console.log("	h / help			--displays list of commands and general usage.");
-	console.log("	i / install <package>		--installs a package from the AUR.");	
-	console.log("	r / remove <package>		--remove a package.");	
+	console.log("	i / install <package>		--installs a package from the AUR.");
+	console.log("	pi / pacinstall <package>		--installs a package using pacman.");	
+	console.log("	r / remove <package>		--remove a package.");
 	console.log("\nDenaur Options");
 	console.log("	--verbose");
 };
@@ -89,6 +104,11 @@ switch(action) {
 	case "i":
 	case "install":
 		installPackage(pkg, args.includes("--verbose"));
+		break;
+
+	case "pi":
+	case "pacinstall":
+		installPacmanPackage(pkg);
 		break;
 
 	case "r":
