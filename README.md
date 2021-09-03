@@ -1,7 +1,7 @@
 # denaur
-AUR Helper made with Deno
+AUR and pacman helper made with Deno
 
-super simple, currently lacking features, end goal is to have a user friendly and simple AUR helper.
+simple and minimalistic, currently has some issues
 
 run ``denaur help`` to get started
 
