@@ -12,6 +12,16 @@
                 "kind": "build",
                 "isDefault": true
             }
-        }
+        },
+        {
+            "label": "Run Tests (may update pacman packages)",
+            "type": "shell",
+            "command": "startTime=`date +%s` && denaur i 2ping && 2ping --version && denaur r 2ping && denaur pi && denaur help && echo \"\nTest took $((`date +%s` - $startTime)) seconds\";",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
     ]
 }

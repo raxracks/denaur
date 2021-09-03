@@ -3,18 +3,19 @@ import * as Colors from "https://deno.land/std/fmt/colors.ts";
 const args = Deno.args;
 const action = args[0];
 const pkg = args[1];
+const verbose = args.includes("--verbose");
 
 
-function e(output : string) {
+function encode(output : string) {
 	return new TextEncoder().encode(output);
 };
 
 function log(output : string) {
-	Deno.writeAll(Deno.stdout, e(output));
+	Deno.writeAll(Deno.stdout, encode(output));
 };
 
 function logn(output : string) {
-	Deno.writeAll(Deno.stdout, e(`\n${output}`));
+	log(`\n${output}`)
 };
 
 async function clean(aurPackage : string) {
@@ -24,7 +25,7 @@ async function clean(aurPackage : string) {
 	log(Colors.green("done.\n"));
 };
 
-async function installPackage(aurPackage : string, verbose : boolean) {
+async function installPackage(aurPackage : string) {
 	let stdioOut : any = "piped";
 	if(verbose) stdioOut = null;
 	
@@ -56,20 +57,26 @@ async function installPackage(aurPackage : string, verbose : boolean) {
 };
 
 async function installPacmanPackage(pacmanPackage : string) {
+	let update = false;
+	if(pacmanPackage === undefined || pacmanPackage.trim() === "") update = true;
+
 	logn("Starting install... ");
 
-	const pacmanProcess = Deno.run({ cmd: ["sudo", "pacman", "-Syu", pacmanPackage] });
+	let command = ["sudo", "pacman", "-Syu"];
+	if(!update) command.push(pacmanPackage);
+
+	const pacmanProcess = Deno.run({ cmd: command });
 
 	const { code } = await pacmanProcess.status();
 
 	if(code !== 0) return console.log(Colors.red("Failed.\n"));;
 
-	console.log(Colors.green(`Package '${pacmanPackage}' installed successfully.`));
+	if(!update) console.log(Colors.green(`Package '${pacmanPackage}' installed successfully.`));
 	
 	logn(Colors.green("Finished.\n"));
 };
 
-async function removePackage(aurPackage : string, verbose : boolean) {
+async function removePackage(aurPackage : string) {
 	let stdioOut : any = "piped";
 	if(verbose) stdioOut = null;
 	
@@ -103,7 +110,7 @@ function help() {
 switch(action) {
 	case "i":
 	case "install":
-		installPackage(pkg, args.includes("--verbose"));
+		installPackage(pkg);
 		break;
 
 	case "pi":
@@ -113,7 +120,7 @@ switch(action) {
 
 	case "r":
 	case "remove":
-		removePackage(pkg, args.includes("--verbose"));
+		removePackage(pkg);
 		break;
 
 	case "h":
