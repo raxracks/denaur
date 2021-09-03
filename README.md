@@ -15,4 +15,7 @@ sudo chmod +x denaur-* && sudo mv denaur-* /usr/bin/denaur
 you can either run the VSCode task or run the following command:
 ```
 deno compile --allow-run denaur.ts && sudo cp denaur /usr/bin/
-```
+```  
+  
+  
+btw im aware its basically just javascript, ill give everything static types later
