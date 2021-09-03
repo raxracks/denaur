@@ -6,7 +6,7 @@
         {
             "label": "Build & Copy",
             "type": "shell",
-            "command": "deno compile --allow-read --allow-run --unstable --allow-env denaur.ts && sudo cp denaur /usr/bin/",
+            "command": "deno compile --allow-run --unstable denaur.ts && sudo cp denaur /usr/bin/",
             "problemMatcher": [],
             "group": {
                 "kind": "build",

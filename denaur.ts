@@ -94,7 +94,7 @@ function help() {
 	console.log("Denaur Commands");
 	console.log("	h / help			--displays list of commands and general usage.");
 	console.log("	i / install <package>		--installs a package from the AUR.");
-	console.log("	pi / pacinstall <package>		--installs a package using pacman.");	
+	console.log("	pi / pacinstall <package>	--installs a package using pacman.");	
 	console.log("	r / remove <package>		--remove a package.");
 	console.log("\nDenaur Options");
 	console.log("	--verbose");
